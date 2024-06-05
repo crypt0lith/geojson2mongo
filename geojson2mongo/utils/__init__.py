@@ -24,6 +24,8 @@ def dump_json(obj: Dict, fp: AnyStr, *, indent: Union[None, str, int] = None):
 
 def reindent_all_json(*, indent: Union[None, int, str] = None):
     for file in os.listdir(JSON_Subdir):
+        if not file.endswith('json'):
+            continue
         file = os.path.join(JSON_Subdir, file)
         dump_json(load_json(file), file, indent=indent)
 
@@ -98,4 +100,4 @@ def enum_json_files():
 
 
 if __name__ == '__main__':
-    enum_json_files()
+    reindent_all_json()

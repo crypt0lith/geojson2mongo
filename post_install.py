@@ -1,20 +1,27 @@
 import os
-import rarfile
+import zipfile
 
 
-def extract_rar(archive_path):
+def extract_zip(archive_path, extract_dir):
     if not os.path.exists(archive_path):
         return
-    extract_dir = os.path.dirname(archive_path)
-    with rarfile.RarFile(archive_path) as rf:
-        rf.extractall(extract_dir)
+    try:
+        with zipfile.ZipFile(archive_path, 'r') as zipf:
+            zipf.extractall(extract_dir)
+    except Exception as e:
+        raise e from None
 
 
 def main():
-    archives = [os.path.join(os.path.dirname(__file__), 'geojson2mongo', 'src_json.rar'),
-                os.path.join(os.path.dirname(__file__), 'json', 'rwanda-2015-geojson.rar')]
+    archives = [{
+        "path": os.path.join(os.path.dirname(__file__), 'archives', 'src_json.zip'),
+        "extract_to": os.path.join(os.path.dirname(__file__), 'geojson2mongo')
+    }, {
+        "path": os.path.join(os.path.dirname(__file__), 'archives', 'rwanda-2015-geojson.zip'),
+        "extract_to": os.path.join(os.path.dirname(__file__), 'json')
+    }]
     for archive in archives:
-        extract_rar(archive)
+        extract_zip(archive["path"], archive["extract_to"])
 
 
 if __name__ == "__main__":

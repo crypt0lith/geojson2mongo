@@ -28,14 +28,7 @@ def recursive_get(obj: Mapping, keychain: KeychainType) -> Any:
     else:
         __o = obj
         for _recurs_key in keychain:
-            if _recurs_key.endswith('*'):
-                s_pattern = _recurs_key.split('*')[0]
-                for _k in __o.keys():
-                    if _k.startswith(s_pattern):
-                        return __o.get(_k)
-                    elif _k == 'sovereign' and s_pattern.startswith('type'):
-                        return 'state'.title()
-            else:
+            if not _recurs_key.endswith('*'):
                 __r: Any = __o.get(_recurs_key, {})
                 if isinstance(__r, dict):
                     if __r == {}:
@@ -44,6 +37,13 @@ def recursive_get(obj: Mapping, keychain: KeychainType) -> Any:
                         __o = __r
                 else:
                     return __r
+            else:
+                search_pattern = _recurs_key.split('*')[0]
+                for _k in __o.keys():
+                    if _k.startswith(search_pattern):
+                        return __o.get(_k)
+                    elif _k == 'sovereign' and search_pattern.startswith('type'):
+                        return 'state'.title()
         return __o
 
 
@@ -185,7 +185,7 @@ class TreeMap(MutableMapping):
 
     def __setitem__(self, __k: _KT, __v: _VT) -> None:
         raise NotImplementedError(
-            "TreeMap items are only mutable if using 'TreeMap.transform' to update the mapping")
+            "TreeMap items are immutable. Use 'TreeMap.transform()' to update the mapping")
 
     def transform(self, keychain=None):
         if keychain is None:
