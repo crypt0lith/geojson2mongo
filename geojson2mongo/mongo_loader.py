@@ -1,3 +1,4 @@
+import argparse
 import os
 
 from dotenv import load_dotenv
@@ -5,14 +6,16 @@ from pymongo import MongoClient
 
 from metadata import TreeMap
 
-load_dotenv()
 
-MONGO_URI = os.getenv('MONGO_URI')
-DATABASE_NAME = os.getenv('DATABASE_NAME')
-COLLECTION_NAME = os.getenv('COLLECTION_NAME')
+def load_env_file(env_path):
+    load_dotenv(env_path)
 
 
 def load_to_mongo(data: dict):
+    MONGO_URI = os.getenv('MONGO_URI')
+    DATABASE_NAME = os.getenv('DATABASE_NAME')
+    COLLECTION_NAME = os.getenv('COLLECTION_NAME')
+
     client = MongoClient(MONGO_URI)
     db = client[DATABASE_NAME]
     collection = db[COLLECTION_NAME]
@@ -20,15 +23,15 @@ def load_to_mongo(data: dict):
     client.close()
 
 
-def main():
+def main(env_path):
+    load_env_file(env_path)
     treemap = TreeMap()
     treemap.transform(keychain=['properties', 'names'])
     node_rel_dict = {}
     k_unique = set()
     for k in treemap.lookup_table.keys():
         if k in k_unique:
-            raise ValueError(
-                f'Non-unique key found: {k}')
+            raise ValueError(f'Non-unique key found: {k}')
         else:
             k_unique.add(k)
         k_levels = treemap.lookup_table.get(k)
@@ -39,8 +42,7 @@ def main():
         if parent is not None:
             parent_node = str(':'.join(k.split(':')[:-1]))
             if parent_node not in node_rel_dict.keys():
-                raise ValueError(
-                    f'Parent node not in keys: {parent_node}')
+                raise ValueError(f'Parent node not in keys: {parent_node}')
             if not node_rel_dict[parent_node].get('children', None):
                 node_rel_dict[parent_node]['children'] = []
             node_rel_dict[parent_node]['children'].append(k)
@@ -61,4 +63,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Load GeoJSON data to MongoDB')
+    parser.add_argument('--env', type=str, default='.env', help='Path to the .env file')
+    args = parser.parse_args()
+    main(args.env)
