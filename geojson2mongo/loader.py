@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-from metadata import TreeMap
+from .metadata import TreeMap
 
 
 def load_env_file(env_path):
