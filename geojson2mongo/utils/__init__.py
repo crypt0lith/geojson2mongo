@@ -7,9 +7,9 @@ from typing import Any, AnyStr, Dict, List, Union
 
 import dill as pickle
 
-from geojson2mongo import root_path, source_path
+from geojson2mongo import source_path
 
-JSON_Subdir = os.path.join(root_path, 'json')
+JSON_Subdir = os.path.join(source_path, 'json_data')
 
 
 def load_json(fp: AnyStr) -> Dict:
