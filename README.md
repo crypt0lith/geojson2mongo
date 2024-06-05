@@ -7,9 +7,19 @@ This is an **early version** of `geojson2mongo` (v0.1.0), so the scope remains l
 
 ## Installation
 
-Install using pip (recommended):
 ```bash
-pip install geojson2mongo
+git clone https://github.com/crypt0lith/geojson2mongo.git
+cd geojson2mongo
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Then run the setup script:
+```
+python setup.py install
 ```
 
 ## Setup `.env`
@@ -23,5 +33,5 @@ COLLECTION_NAME = "example_collection"
 
 Specify its path using the `--env` argument when executing the script.
 ```bash
-python -m geojson2mongo --env /path/to/your/.env
+python -m geojson2mongo.loader --env /path/to/your/.env
 ```
