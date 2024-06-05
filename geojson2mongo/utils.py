@@ -1,15 +1,10 @@
-__all__ = ['JSON_Subdir', 'dump_json', 'enum_json_files', 'flatten', 'load_json', 'load_source',
-           'partition_scopes', 'reindent_all_json']
-
 import json
 import os
 from typing import Any, AnyStr, Dict, List, Union
 
 import dill as pickle
 
-from geojson2mongo import source_path
-
-JSON_Subdir = os.path.join(source_path, 'json_data')
+from .json_data import JSON_Subdir
 
 
 def load_json(fp: AnyStr) -> Dict:
@@ -51,7 +46,7 @@ def partition_scopes(filepaths: Union[List[AnyStr], None] = None, scopes=None):
     return partitions
 
 
-def load_source(fp: AnyStr = os.path.join(source_path, 'src_json.pkl')):
+def load_source(fp: AnyStr = os.path.join(JSON_Subdir, 'src_json.pkl')):
     def build_cache():
         src = []
         scopes = list(flatten(partition_scopes()))

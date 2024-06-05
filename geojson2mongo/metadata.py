@@ -3,7 +3,8 @@ from _collections_abc import MutableMapping
 from typing import Any, Iterable, Iterator, Mapping, TypeVar, Union
 
 from .geometry import MultiPolygon
-from .utils import JSON_Subdir, dump_json, enum_json_files, load_json, load_source
+from .json_data import JSON_Subdir
+from .utils import dump_json, enum_json_files, load_json, load_source
 
 MetadataJSONPath = os.path.join(JSON_Subdir, 'metadata.json')
 

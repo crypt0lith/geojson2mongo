@@ -2,10 +2,4 @@
 /.idea/
 /build/
 /geojson2mongo.egg-info/
-/geojson2mongo/src_json.pkl
-/geojson2mongo/json_data/0-base-boundary-rwanda-2015-geojson.json
-/geojson2mongo/json_data/1-admin-divisions-rwanda-2015-geojson.json
-/geojson2mongo/json_data/2-admin-divisions-rwanda-2015-geojson.json
-/geojson2mongo/json_data/3-admin-divisions-rwanda-2015-geojson.json
-/geojson2mongo/json_data/4-admin-divisions-rwanda-2015-geojson.json
-/geojson2mongo/json_data/5-admin-divisions-rwanda-2015-geojson.json
+/geojson2mongo/json_data/
