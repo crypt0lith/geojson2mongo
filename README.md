@@ -17,9 +17,9 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Then run the setup script:
+Then run the extract script to unzip the example dataset:
 ```
-python setup.py install
+python extract_dataset.py
 ```
 
 ## Setup `.env`
@@ -27,8 +27,8 @@ python setup.py install
 Create a file named `.env` with the following variables:
 ```dotenv
 MONGO_URI = "mongodb://localhost:27017"  
-DATABASE_NAME = "example_database"  
-COLLECTION_NAME = "example_collection"
+DATABASE_NAME = "test_db"  
+COLLECTION_NAME = "test_coll"
 ```
 
 Specify its path using the `--env` argument when executing the script.
