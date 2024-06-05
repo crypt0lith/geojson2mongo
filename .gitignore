@@ -1,1 +1,11 @@
 /.env
+/.idea/
+/geojson2mongo/src_json.pkl
+/json/0-base-boundary-rwanda-2015-geojson.json
+/json/1-admin-divisions-rwanda-2015-geojson.json
+/json/2-admin-divisions-rwanda-2015-geojson.json
+/json/3-admin-divisions-rwanda-2015-geojson.json
+/json/4-admin-divisions-rwanda-2015-geojson.json
+/json/5-admin-divisions-rwanda-2015-geojson.json
+/geojson2mongo.egg-info/
+/build/
