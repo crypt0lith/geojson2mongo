@@ -14,7 +14,7 @@ class PostInstallCommand(install):
 
     def run(self):
         install.run(self)
-        subprocess.check_call([sys.executable, "post_install.py"])
+        subprocess.check_call([sys.executable, 'post_install.py'])
 
 
 setup(
@@ -23,6 +23,4 @@ setup(
     license='', author='crypt0lith', author_email='',
     description='A tool for loading and mapping GeoJSON data in MongoDB.', cmdclass={
         'install': PostInstallCommand,
-    }, entry_points={
-        'console_scripts': ['geojson2mongo=geojson2mongo.loader:main', ],
     }, include_package_data=True,)

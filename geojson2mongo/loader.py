@@ -60,3 +60,10 @@ def main(env_path):
             node=k, name=name, type=div_type, parent=parent_node, children=[], geom=shape_data)
 
     load_to_mongo(node_rel_dict)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Load GeoJSON data to MongoDB')
+    parser.add_argument('--env', type=str, default='.env', help='Path to the .env file')
+    args = parser.parse_args()
+    main(args.env)
