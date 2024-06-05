@@ -2,7 +2,7 @@ import os
 import zipfile
 
 
-def extract_zip(archive_path, extract_dir):
+def _extract_zip(archive_path, extract_dir):
     if not os.path.exists(archive_path):
         return
     try:
@@ -21,7 +21,7 @@ def main():
         'extract_to': os.path.join(os.path.dirname(__file__), 'geojson2mongo/json_data')
     }]
     for archive in archives:
-        extract_zip(archive['path'], archive['extract_to'])
+        _extract_zip(archive['path'], archive['extract_to'])
 
 
 if __name__ == '__main__':
