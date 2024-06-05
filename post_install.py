@@ -14,10 +14,10 @@ def extract_zip(archive_path, extract_dir):
 
 def main():
     archives = [{
-        'path': '_src.zip',
+        'path': os.path.join(os.path.dirname(__file__), 'archives/src-json.zip'),
         'extract_to': os.path.join(os.path.dirname(__file__), 'geojson2mongo/json_data')
     }, {
-        'path': '_rwanda2015.zip',
+        'path': os.path.join(os.path.dirname(__file__), 'archives/rwanda2015-json.zip'),
         'extract_to': os.path.join(os.path.dirname(__file__), 'geojson2mongo/json_data')
     }]
     for archive in archives:
