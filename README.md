@@ -33,7 +33,7 @@ COLLECTION_NAME = "example_collection"
 
 Specify the path to the `.env` file using the `--env` argument when executing the script:
 ```bash
-python -m geojson2mongo.loader --env /path/to/your/.env
+python -m geojson2mongo --env /path/to/your/.env
 ```
 
 ## Future Updates
