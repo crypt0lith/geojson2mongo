@@ -1,5 +1,3 @@
 /.env
 /.idea/
-/build/
-/geojson2mongo.egg-info/
 /geojson2mongo/json_data/
