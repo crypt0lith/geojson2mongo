@@ -1,4 +1,4 @@
-from geojson2mongo.loader import args_main as main
+from geojson2mongo.loader import main_cli
 
 if __name__ == '__main__':
-    main()
+    main_cli()
