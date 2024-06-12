@@ -17,11 +17,6 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Then run the extract script to unzip the example dataset:
-```bash
-python extract_dataset.py
-```
-
 ## Setup `.env` for MongoDB
 
 Create a file named `.env` with the following variables:
