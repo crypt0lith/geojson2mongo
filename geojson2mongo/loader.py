@@ -9,24 +9,7 @@ from pymongo import MongoClient
 from .metadata import TreeMap
 
 
-def load_env_file(env_path):
-    load_dotenv(env_path)
-
-
-def load_to_mongo(data: dict):
-    MONGO_URI = os.getenv('MONGO_URI')
-    DATABASE_NAME = os.getenv('DATABASE_NAME')
-    COLLECTION_NAME = os.getenv('COLLECTION_NAME')
-
-    client = MongoClient(MONGO_URI)
-    db = client[DATABASE_NAME]
-    collection = db[COLLECTION_NAME]
-    collection.insert_many([data[key] for key in data.keys()])
-    client.close()
-
-
-def main(env_path):
-    json_data_subdir = os.listdir(os.path.join(os.path.dirname(__file__), './json_data'))
+def check_jsondir_is_empty(json_data_subdir: list[str]):
     json_data_filtered_subdir = [f for f in json_data_subdir if not f.startswith('__')]
     if not json_data_filtered_subdir:
         from download_dataset import main as download_default_dataset, STANFORD_EARTHWORKS_SUBDOMAIN
@@ -47,10 +30,9 @@ def main(env_path):
                 exit()
         except Exception as e:
             raise e
-    print('Uploading GeoJSON metadata to MongoDB...')
-    load_env_file(env_path)
-    treemap = TreeMap()
-    treemap.transform(keychain=['properties', 'names'])
+
+
+def relate_nodes(treemap: 'TreeMap') -> dict:
     node_rel_dict = {}
     k_unique = set()
     for k in treemap.lookup_table.keys():
@@ -63,15 +45,7 @@ def main(env_path):
             parent = f'{k_levels[-2]}'
         else:
             parent = None
-        if parent is not None:
-            parent_node = str(':'.join(k.split(':')[:-1]))
-            if parent_node not in node_rel_dict.keys():
-                raise ValueError(f'Parent node not in keys: {parent_node}')
-            if not node_rel_dict[parent_node].get('children', None):
-                node_rel_dict[parent_node]['children'] = []
-            node_rel_dict[parent_node]['children'].append(k)
-        else:
-            parent_node = None
+        parent_node = handle_parent_node(k, node_rel_dict, parent)
         name = treemap.lookup_table.get(k)[-1]
         div_type = treemap.div_type(k)
         geoshape = treemap.geom(k)
@@ -82,8 +56,41 @@ def main(env_path):
         }
         node_rel_dict[k] = dict(
             node=k, name=name, type=div_type, parent=parent_node, children=[], geom=shape_data)
+    return node_rel_dict
 
-    load_to_mongo(node_rel_dict)
+
+def handle_parent_node(k: str, node_rel_dict: dict, parent):
+    if parent is not None:
+        parent_node = str(':'.join(k.split(':')[:-1]))
+        if parent_node not in node_rel_dict.keys():
+            raise ValueError(f'Parent node not in keys: {parent_node}')
+        if not node_rel_dict[parent_node].get('children', None):
+            node_rel_dict[parent_node]['children'] = []
+        node_rel_dict[parent_node]['children'].append(k)
+    else:
+        parent_node = None
+    return parent_node
+
+
+def load_to_mongo(data: dict):
+    MONGO_URI = os.getenv('MONGO_URI')
+    DATABASE_NAME = os.getenv('DATABASE_NAME')
+    COLLECTION_NAME = os.getenv('COLLECTION_NAME')
+    print('Uploading GeoJSON metadata to MongoDB...')
+    client = MongoClient(MONGO_URI)
+    db = client[DATABASE_NAME]
+    collection = db[COLLECTION_NAME]
+    collection.insert_many([data[key] for key in data.keys()])
+    client.close()
+
+
+def main(env_path):
+    json_data_subdir = os.listdir(os.path.join(os.path.dirname(__file__), './json_data'))
+    check_jsondir_is_empty(json_data_subdir)
+    treemap = TreeMap()
+    treemap.transform(keychain=['properties', 'names'])
+    load_dotenv(env_path)
+    load_to_mongo(relate_nodes(treemap))
 
 
 def main_cli():
