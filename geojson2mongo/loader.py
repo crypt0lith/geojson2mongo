@@ -26,6 +26,28 @@ def load_to_mongo(data: dict):
 
 
 def main(env_path):
+    json_data_subdir = os.listdir(os.path.join(os.path.dirname(__file__), './json_data'))
+    json_data_filtered_subdir = [f for f in json_data_subdir if not f.startswith('__')]
+    if not json_data_filtered_subdir:
+        from download_dataset import main as download_default_dataset, STANFORD_EARTHWORKS_SUBDOMAIN
+        print('JSON data subdirectory is empty.')
+        try:
+            user_inp: str = ''
+            while user_inp.lower() not in ['y', 'n']:
+                try:
+                    user_inp = input(
+                        f"Download the default GeoJSON dataset 'rwanda-2015' from '{STANFORD_EARTHWORKS_SUBDOMAIN}'? "
+                        f"[y, N]: ")
+                except KeyboardInterrupt as e:
+                    print()
+                    raise e from None
+            if user_inp == 'y':
+                download_default_dataset()
+            elif user_inp == 'n':
+                exit()
+        except Exception as e:
+            raise e
+    print('Uploading GeoJSON metadata to MongoDB...')
     load_env_file(env_path)
     treemap = TreeMap()
     treemap.transform(keychain=['properties', 'names'])
