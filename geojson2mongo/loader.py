@@ -10,26 +10,32 @@ from .metadata import TreeMap
 
 
 def check_jsondir_is_empty(json_data_subdir: list[str]):
-    json_data_filtered_subdir = [f for f in json_data_subdir if not f.startswith('__')]
-    if not json_data_filtered_subdir:
-        from download_dataset import main as download_default_dataset, STANFORD_EARTHWORKS_SUBDOMAIN
-        print('JSON data subdirectory is empty.')
+    it = iter(json_data_subdir)
+    while True:
         try:
-            user_inp: str = ''
-            while user_inp.lower() not in ['y', 'n']:
-                try:
-                    user_inp = input(
-                        f"Download the default GeoJSON dataset 'rwanda-2015' from '{STANFORD_EARTHWORKS_SUBDOMAIN}'? "
-                        f"[y, N]: ")
-                except KeyboardInterrupt as e:
-                    print()
-                    raise e from None
-            if user_inp == 'y':
-                download_default_dataset()
-            elif user_inp == 'n':
-                exit()
-        except Exception as e:
-            raise e
+            if next(it).endswith('geojson.json'):
+                return
+        except StopIteration:
+            break
+    from download_dataset import STANFORD_EARTHWORKS_SUBDOMAIN, main as download_default_dataset
+    print('JSON data subdirectory is empty.')
+    try:
+        user_inp: str = ''
+        while user_inp.lower() not in ['y', 'n']:
+            try:
+                user_inp = input(
+                    f"Download the default GeoJSON dataset 'rwanda-2015' from '"
+                    f"{STANFORD_EARTHWORKS_SUBDOMAIN}'? "
+                    f"[y, N]: ")
+            except KeyboardInterrupt as e:
+                print()
+                raise e from None
+        if user_inp == 'y':
+            download_default_dataset()
+        elif user_inp == 'n':
+            exit()
+    except Exception as e:
+        raise e
 
 
 def relate_nodes(treemap: 'TreeMap') -> dict:
@@ -87,6 +93,7 @@ def load_to_mongo(data: dict):
 def main(env_path):
     json_data_subdir = os.listdir(os.path.join(os.path.dirname(__file__), './json_data'))
     check_jsondir_is_empty(json_data_subdir)
+    print('Processing GeoJSON metadata...')
     treemap = TreeMap()
     treemap.transform(keychain=['properties', 'names'])
     load_dotenv(env_path)
